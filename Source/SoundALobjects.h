@@ -24,17 +24,20 @@ namespace Sound
 	class ALBufferID
 	{
 	public:
-		static ALBufferIDPtr Create();
-		static ALBufferIDPtr CreateDummy();
+		static ALBufferIDPtr Create();			///ポインタを作成する
+		static ALBufferIDPtr CreateDummy();		///ダミーのポインタを作成する
 		virtual bool Init(ALenum format, const ALvoid* data, ALsizei size, ALsizei freq);
 		virtual bool Init(const char* filename, bool changeMono=false ,std::string warningMessage="");
 		virtual ALuint Id()const { return id; }///<getter;
 	private:
+		/*コピー防止*/
 		virtual void Destroy();
 		ALBufferID() = default;
 		~ALBufferID() { Destroy(); }
 		ALBufferID(const ALBufferID&) = delete;
 		ALBufferID& operator=(const ALBufferID&) = delete;
+
+
 		ALuint id = 0;		///BufferId
 	};
 	/*
@@ -61,10 +64,12 @@ namespace Sound
 		virtual void SetVolume(float f);
 		virtual void Pouse();
 		virtual bool IsActive();
-		virtual void ActorId(short id) { actorId = id; }
+		virtual void ActorId(short id);
 		virtual short ActorId()const { return actorId; }
-		virtual void SetBuffer(ALuint bufferId=0)const;
 		virtual void PrintState()const;
+
+		/*OpenALのSourceのparameter設定*/
+		virtual void SetBuffer(ALuint bufferId=0)const;
 		virtual void SetRelative(bool io = false)const;
 		virtual void SetLooping(bool io = false)const;
 		virtual void SetPitch(float pitch =1.0f)const;
@@ -80,12 +85,21 @@ namespace Sound
 		virtual void SetMaxGain(float maxGain=1.0f)const;
 		virtual void SetRollOffFactor(float rolloff=1.0f)const;
 
+		/*毎フレーム実行する更新処理*/
 		virtual void Update(float);
 
 		virtual STATE GetState()const;
+		
 		virtual void UnlinkActor();
+		/*一定期間ごとに実行する更新処理*/
 		virtual short ActorIdJustStopped();
 	private:
+		/*コピー防止*/
+		ALSourceID();
+		~ALSourceID() { Destroy(); }
+		ALSourceID(const ALSourceID&) = delete;
+		ALSourceID& operator=(const ALSourceID&) = delete;
+
 		virtual void SetGain(float vol = 1.0f)const;
 		virtual void Destroy();
 		virtual void SetState(STATE=e_STATE_MAX);
@@ -95,21 +109,16 @@ namespace Sound
 		uint16_t lastStats = 0;
 		STATE teststate=e_STATE_STOP;
 
-		ALSourceID();
-		~ALSourceID() { Destroy(); }
-		ALSourceID(const ALSourceID&) = delete;
-		ALSourceID& operator=(const ALSourceID&) = delete;
-
 		ALuint id = 0;			//SourceId;
 
-		uint16_t state = 0;
+		uint16_t state = 0;		//ステータス
 
 		/*イーズインアウト再生を使う場合の値*/
 		float easingGain = 0.0f;
 		float easingRate = 0.0f;
 		float gain=0.0f;
 
-		short actorId = -1;	//ソースを使用しているActorのid.
+		short actorId = -1;		//ソースを使用しているActorのid.
 	};
 }
 

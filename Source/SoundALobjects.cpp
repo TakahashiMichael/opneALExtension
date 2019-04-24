@@ -5,9 +5,6 @@
 namespace Sound {
 	/*
 	* ポインタの作成
-	*
-	*
-	*
 	*/
 	ALBufferIDPtr ALBufferID::Create()
 	{
@@ -245,6 +242,13 @@ namespace Sound {
 		actorId = -1;
 	}
 
+	/*
+	* OpenALのSource()関数を個別に全て関数にまとめた,
+	*
+	*
+	*
+	*/
+
 	void ALSourceID::Init(){alGenSources(1, &id);}
 	void ALSourceID::SetBuffer(ALuint bufferId)const{alSourcei(id, AL_BUFFER, bufferId);}
 	void ALSourceID::SetGain(float vol)const{alSourcef(id, AL_GAIN, vol);}
@@ -334,6 +338,19 @@ namespace Sound {
 	}
 
 	/*
+	* アクターのidを設定する
+	*
+	*/
+	void ALSourceID::ActorId(short index) {
+		//アクターのidを所持していた場合は値をリセット
+		if (actorId >= 0) {
+			UnlinkActor();
+		}
+		actorId = index;
+
+	}
+
+	/*
 	* ソースオブジェクトを破棄する.
 	*/
 	void ALSourceID::Destroy()
@@ -347,10 +364,10 @@ namespace Sound {
 
 	void ALSourceID::PrintState()const
 	{
-//#define AL_INITIAL                               0x1011
-//#define AL_PLAYING                               0x1012
-//#define AL_PAUSED                                0x1013
-//#define AL_STOPPED                               0x1014
+	//#define AL_INITIAL                               0x1011
+	//#define AL_PLAYING                               0x1012
+	//#define AL_PAUSED                                0x1013
+	//#define AL_STOPPED                               0x1014
 		ALenum state = 0;
 		alGetSourcei(id, AL_SOURCE_STATE, &state);
 		switch (state)
@@ -374,12 +391,6 @@ namespace Sound {
 			break;
 
 		}
-		float ming=0.0f;
-		float maxg=0.0f;
-		alGetSourcef(id,AL_MIN_GAIN,&ming);
-		alGetSourcef(id,AL_MAX_GAIN,&maxg);
-		std::cout << "ミンゲイ:" <<ming<< std::endl;
-		std::cout << "マックス:" <<maxg<< std::endl;
 	}
 
 	/*

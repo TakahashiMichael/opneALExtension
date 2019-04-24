@@ -125,6 +125,7 @@ namespace Sound
 				int sourceID = actorList[sourceList[i]->ActorId()]->SourceId();
 				actorList[sourceList[i]->ActorId()]->ResetSourceId();
 				actorList[actorId]->SourceId(sourceID);
+				sourceList[i]->UnlinkActor();
 				sourceList[i]->ActorId(actorId);
 				return i;
 			}
@@ -440,10 +441,12 @@ namespace Sound
 		//バッファーの後始末.
 		BufferFinalize();
 
+		//コンテキストの破棄
 		if (flagList.Get(flagList.e_BOOL_INITIALIZED_CONTEXT)) {
 			alcMakeContextCurrent(NULL);
 			alcDestroyContext(context);
 		}
+		//デバイスの破棄
 		if (flagList.Get(flagList.e_BOOL_INITIALIZED_DEVICE)) {
 			alcCloseDevice(device);
 		}
@@ -463,13 +466,14 @@ namespace Sound
 
 	}
 	/*
-	*
+	* バッファーを削除する.
 	*/
 	void Engine::BufferFinalize()
 	{
 		actorList.clear();
 		sourceList.clear();
 		soundDataList.clear();
+		soundData3DList.clear();
 	}
 
 

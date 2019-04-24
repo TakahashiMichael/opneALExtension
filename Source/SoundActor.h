@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 namespace Sound {
+	/*Sound内で使用する三軸を持つ構造体*/
 	struct Vector {
 		float x;
 		float y;
