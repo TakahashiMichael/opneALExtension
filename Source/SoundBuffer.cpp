@@ -29,9 +29,10 @@ namespace Sound
 		}
 		std::string destroyFilename = actorList[index]->GetFilename();
 		//アクターの属性を確認.所持者が0になった音声データを捨てる
+		std::cout << destroyFilename << std::endl;
 		if (actorList[index]->GetStateBoolian(EngineFunc::e_BOOL_3D)) {
 			if (soundData3DCounter.count(destroyFilename)) {
-				--soundData3DCounter.at(destroyFilename);
+				soundData3DCounter.at(destroyFilename)-=1;
 				std::cout << "デバッグ;ファイル所有者を表示" << soundData3DCounter.at(destroyFilename)<< std::endl;
 				if (soundData3DCounter.at(destroyFilename) <= 0) {
 					soundData3DList.erase(destroyFilename);
@@ -40,8 +41,8 @@ namespace Sound
 		}
 		else {
 			if (soundDataCounter.count(destroyFilename)) {
-				--soundDataCounter.at(destroyFilename);
-				std::cout << "デバッグ;ファイル所有者を表示" << soundData3DCounter.at(destroyFilename) << std::endl;
+				soundDataCounter.at(destroyFilename)-=1;
+				std::cout << "デバッグ;ファイル所有者を表示" << soundDataCounter.at(destroyFilename) << std::endl;
 				if (soundDataCounter.at(destroyFilename) <= 0) {
 					soundDataList.erase(destroyFilename);
 				}
